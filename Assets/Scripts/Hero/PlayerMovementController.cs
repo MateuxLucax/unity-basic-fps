@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Hero
 {
@@ -6,7 +7,7 @@ namespace Hero
     {
         public CharacterController controller;
         public float speed = 6f;
-        public float gravity = 100;
+        public float gravity = -50;
         public float jumpHeight = 3f;
 
         public Transform groundCheck;
@@ -25,11 +26,15 @@ namespace Hero
         public AudioClip walkSound;
         private AudioSource _audioSource;
 
+        private int healthPoints = 100;
+        private Slider healthBar;
+
         // Start is called before the first frame update
         private void Start()
         {
             controller = GetComponent<CharacterController>();
             _audioSource = GetComponent<AudioSource>();
+            healthBar = GameObject.Find("HealthSlider").GetComponent<Slider>();
             if (Camera.main != null) _cameraTransform = Camera.main.transform;
         }
 
@@ -100,6 +105,12 @@ namespace Hero
         private void CheckCrouchedHitBox()
         {
             _standUpBlocked = Physics.Raycast(_cameraTransform.position, Vector3.up, out _, 1.1f);
+        }
+
+        public void UpdateHealth(int newHealthPoints)
+        {
+            healthPoints = Mathf.CeilToInt(Mathf.Clamp(healthPoints + newHealthPoints, 0, 100));
+            healthBar.value = healthPoints;
         }
     }
 }

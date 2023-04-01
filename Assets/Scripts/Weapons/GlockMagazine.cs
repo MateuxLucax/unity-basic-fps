@@ -3,17 +3,17 @@ using UnityEngine;
 
 namespace Weapons
 {
-    public class GlockMagazine : MonoBehaviour, IGrabbable
+    public sealed class GlockMagazine : MonoBehaviour, IGrabbable
     {
         private Glock _glock;
 
         public void Grab()
         {
-            _glock.AddMagazine();
+            StartCoroutine(_glock.AddMagazine());
         }
 
         // Start is called before the first frame update
-        protected virtual void Start()
+        private void Start()
         {
             _glock = GameObject.FindWithTag("Weapon").GetComponent<Glock>();
         }

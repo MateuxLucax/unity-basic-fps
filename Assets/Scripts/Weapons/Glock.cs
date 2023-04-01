@@ -7,13 +7,10 @@ namespace Weapons
     public class Glock : MonoBehaviour
     {
         public Text ammoText;
-
         public Camera mainCamera;
-
         public GameObject shootEffect;
         public GameObject postShootEffect;
         public GameObject spark;
-
         private Animator _animator;
         private RaycastHit _hit;
         private bool _isRunning;
@@ -21,11 +18,9 @@ namespace Weapons
         private static readonly int ActionRunning = Animator.StringToHash("actionRunning");
         private static readonly int Aim = Animator.StringToHash("aim");
         public AudioClip[] clips;
-
         private const int MagazineCapacity = 17;
         private int _ammo = MagazineCapacity;
         private int _magazines = 3;
-
         public GameObject cursorImage;
 
         // Start is called before the first frame update
@@ -82,7 +77,6 @@ namespace Weapons
 
             var ray = mainCamera.ScreenPointToRay(new Vector3(screenX, screenY));
             _animator.Play("GlockShoot");
-            _audioSource.PlayOneShot(clips[0]);
 
             GameObject sparkObj = null;
             var shootEffectObj = Instantiate(shootEffect, postShootEffect.transform.position,
@@ -96,9 +90,16 @@ namespace Weapons
                     var direction = ray.direction;
                     _hit.rigidbody.AddForceAtPosition(direction * 500, _hit.point);
                 }
+                if (_hit.transform.CompareTag("TakeDamage"))
+                {
+                    var takeDamage = _hit.transform.GetComponent<ITakeDamage>();
+                    takeDamage?.TakeDamage(5);
+                }
             }
 
+            _audioSource.PlayOneShot(clips[0]);
             yield return new WaitForSeconds(0.3f);
+            _audioSource.Stop();
             Destroy(shootEffectObj);
             Destroy(sparkObj);
 
@@ -111,15 +112,18 @@ namespace Weapons
             _isRunning = true;
             if (_magazines > 0 && _ammo < 17)
             {
-                _audioSource.PlayOneShot(clips[1]);
                 _animator.Play("GlockReload");
+                _audioSource.PlayOneShot(clips[1]);
+                yield return new WaitForSeconds(1.0f);
+                _audioSource.Stop();
                 _ammo = MagazineCapacity;
                 _magazines--;
-                yield return new WaitForSeconds(1.0f);
             }
             else
             {
                 _audioSource.PlayOneShot(clips[2]);
+                yield return new WaitForSeconds(0.1f);
+                _audioSource.Stop();
             }
             UpdateAmmoText();
             _isRunning = false;
@@ -130,11 +134,13 @@ namespace Weapons
             ammoText.text = $"{_ammo} / {_magazines * MagazineCapacity}";
         }
 
-        public void AddMagazine()
+        public IEnumerator AddMagazine()
         {
             _magazines++;
             UpdateAmmoText();
             _audioSource.PlayOneShot(clips[1]);
+            yield return new WaitForSeconds(1.0f);
+            _audioSource.Stop();
         }
     }
 }
