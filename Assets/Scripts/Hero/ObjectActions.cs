@@ -54,7 +54,7 @@ namespace Hero
         private void Grab()
         {
             var grabbable = _objectId.GetGrabObject().GetComponent<IGrabbable>();
-            grabbable.Grab();
+            grabbable?.Grab();
 
             Destroy(_objectId.GetGrabObject());
         }
