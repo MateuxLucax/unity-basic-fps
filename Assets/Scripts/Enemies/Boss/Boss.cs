@@ -1,10 +1,11 @@
 using Hero;
 using UnityEngine;
 using UnityEngine.AI;
+using Weapons;
 
 namespace Enemies.Boss
 {
-    public class Boss : MonoBehaviour
+    public class Boss : MonoBehaviour, ITakeDamage
     {
 
         private NavMeshAgent _agent;
@@ -65,7 +66,6 @@ namespace Enemies.Boss
             }
 
             if (!_animator.GetBool(CanWalk)) return;
-            Debug.Log("Boss is running towards player");
             _agent.isStopped = false;
             _animator.ResetTrigger(Attack);
             _animator.ResetTrigger(Capoeira);
@@ -109,7 +109,6 @@ namespace Enemies.Boss
 
         public void TakeDamage(int damage)
         {
-            Debug.Log("Boss took damage");
             _audioSource.PlayOneShot(damageSound);
             healthPoints -= damage;
             _agent.isStopped = true;
@@ -128,7 +127,6 @@ namespace Enemies.Boss
 
         public void DoDamage()
         {
-            Debug.Log("Boss did damage");
             _audioSource.PlayOneShot(Random.value > 0.5 ? capoeiraSound : attackSound);
             _player.GetComponent<PlayerMovementController>().UpdateHealth(-Damage);
         }

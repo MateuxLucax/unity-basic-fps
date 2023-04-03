@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Enemies.CommonEnemy
+namespace Enemies.Boss
 {
-    public class CommonEnemyRunningState : StateMachineBehaviour
+    public class BossRunningState : StateMachineBehaviour
     {
         private static readonly int CanWalk = Animator.StringToHash("canWalk");
 

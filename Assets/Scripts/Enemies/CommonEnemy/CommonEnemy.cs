@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Weapons;
 
-namespace Enemies
+namespace Enemies.CommonEnemy
 {
     public class CommonEnemy : MonoBehaviour, ITakeDamage
     {
