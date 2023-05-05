@@ -8,6 +8,7 @@ TagManager:
   - Grabbable
   - Weapon
   - TakeDamage
+  - AmbientSound
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
+  - Post
   - 
   - 
   - 

@@ -1,7 +1,7 @@
+using UnityEditor;
 using UnityEngine;
-using MinAttribute = Sun_Temple.PostProcessing.Runtime.Attributes.MinAttribute;
 
-namespace UnityEditor.PostProcessing
+namespace Sun_Temple.PostProcessing.Editor.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(MinAttribute))]
     sealed class MinDrawer : PropertyDrawer

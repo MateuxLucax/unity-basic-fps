@@ -6,7 +6,7 @@ namespace Hero
     public class PlayerMovementController : MonoBehaviour
     {
         public CharacterController controller;
-        public float speed = 6f;
+        public float speed = 60f;
         public float gravity = -50;
         public float jumpHeight = 3f;
 
@@ -26,27 +26,38 @@ namespace Hero
         public AudioClip walkSound;
         private AudioSource _audioSource;
 
-        private int healthPoints = 100;
-        private Slider healthBar;
+        const int MaxHealthPoints = 100;
+        private int _healthPoints = MaxHealthPoints;
+        private Slider _healthBar;
+
+        private Inventory _inventory;
 
         // Start is called before the first frame update
         private void Start()
         {
             controller = GetComponent<CharacterController>();
             _audioSource = GetComponent<AudioSource>();
-            healthBar = GameObject.Find("HealthSlider").GetComponent<Slider>();
+            _healthBar = GameObject.Find("HealthSlider").GetComponent<Slider>();
+            _inventory = GetComponent<Inventory>();
             if (Camera.main != null) _cameraTransform = Camera.main.transform;
         }
 
         // Update is called once per frame
         private void Update()
         {
+            if (_healthPoints <= 0)
+            {
+                StartCoroutine(_inventory.GameOver(true));
+                return;
+            }
+
             isGrounded = Physics.CheckSphere(groundCheck.position, sphereRadius, groundMask);
 
             var x = Input.GetAxis("Horizontal");
             var z = Input.GetAxis("Vertical");
 
-            var move = transform.right * x + transform.forward * z;
+            var transform1 = transform;
+            var move = transform1.right * x + transform1.forward * z;
 
             controller.Move(speed * Time.deltaTime * move);
 
@@ -80,7 +91,7 @@ namespace Hero
             if (Input.GetKeyDown(KeyCode.LeftControl)) CrouchStandUp();
         }
 
-        private void onDrawGizmosSelected()
+        private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(groundCheck.position, sphereRadius);
@@ -109,8 +120,8 @@ namespace Hero
 
         public void UpdateHealth(int newHealthPoints)
         {
-            healthPoints = Mathf.CeilToInt(Mathf.Clamp(healthPoints + newHealthPoints, 0, 100));
-            healthBar.value = healthPoints;
+            _healthPoints = Mathf.CeilToInt(Mathf.Clamp(_healthPoints + newHealthPoints, 0, MaxHealthPoints));
+            _healthBar.value = _healthPoints;
         }
     }
 }

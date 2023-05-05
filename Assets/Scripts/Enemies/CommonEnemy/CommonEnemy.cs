@@ -9,6 +9,7 @@ namespace Enemies.CommonEnemy
     {
         private NavMeshAgent _agent;
         private GameObject _player;
+        private Inventory _inventory;
         private Animator _animator;
         public float attackDistance = 2.0f;
         private static readonly int Shot = Animator.StringToHash("shot");
@@ -24,24 +25,41 @@ namespace Enemies.CommonEnemy
         public AudioClip attackSound;
         public AudioClip damageSound;
         private AudioSource _audioSource;
+        private FieldOfView _fov;
+        private RandomPatrol _randomPatrol;
 
-        // Start is called before the first frame update
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
             _agent = GetComponent<NavMeshAgent>();
             _player = GameObject.FindWithTag("Player");
+            _inventory = _player.GetComponent<Inventory>();
             _animator = GetComponent<Animator>();
             _ragDollEffect = GetComponent<RagDollEffect>();
             _audioSource = GetComponent<AudioSource>();
             _ragDollEffect.Init();
+            _fov = GetComponent<FieldOfView>();
+            _randomPatrol = GetComponent<RandomPatrol>();
         }
 
-        // Update is called once per frame
         private void Update()
         {
-            RunTowardsPlayer();
-            StarePlayer();
+            if (healthPoints <= 0)
+            {
+                Die();
+                return;
+            }
+
+            if (_fov.canSeePlayer || _animator.GetBool(StopAttack) == false)
+            {
+                RunTowardsPlayer();
+            } else
+            {
+                CorrectRigidbodyExit();
+                _agent.isStopped = false;
+                _animator.SetBool(StopAttack, true);
+                _randomPatrol.Walk();
+            }
         }
 
         private void RunTowardsPlayer()
@@ -55,23 +73,17 @@ namespace Enemies.CommonEnemy
                 _animator.SetBool(StopAttack, false);
                 CorrectRigidbodyEnter();
             }
-            if (distanceFromPlayer >= 3)
+            if (distanceFromPlayer >= attackDistance + 1)
             {
                 _animator.SetBool(StopAttack, true);
                 CorrectRigidbodyExit();
             }
-
-            if (!_animator.GetBool(CanWalk)) return;
-            _agent.isStopped = false;
-            _animator.ResetTrigger(Attack);
-            _agent.SetDestination(_player.transform.position);
-        }
-
-        private void StarePlayer()
-        {
-            var lookPos = _player.transform.position - transform.position;
-            var rotation = Quaternion.LookRotation(lookPos);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, Time.deltaTime * 300);
+            if (_animator.GetBool(CanWalk))
+            {
+                _agent.isStopped = false;
+                _agent.SetDestination(_player.transform.position);
+                _animator.ResetTrigger(Attack);
+            }
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -103,9 +115,9 @@ namespace Enemies.CommonEnemy
 
         public void TakeDamage(int damage)
         {
+            _agent.isStopped = true;
             _audioSource.PlayOneShot(damageSound);
             healthPoints -= damage;
-            _agent.isStopped = true;
             _animator.SetTrigger(Shot);
             _animator.SetBool(CanWalk, false);
             if (healthPoints <= 0)
@@ -127,12 +139,13 @@ namespace Enemies.CommonEnemy
 
         private void Die()
         {
-            _audioSource.clip = deathSound;
-            _audioSource.Play();
+            _inventory.KilledEnemy();
+            _audioSource.PlayOneShot(deathSound, 0.5f);
             _agent.isStopped = true;
             _animator.SetBool(CanWalk, false);
             _ragDollEffect.Activate();
             enabled = false;
+            _fov.enabled = false;
         }
     }
 }

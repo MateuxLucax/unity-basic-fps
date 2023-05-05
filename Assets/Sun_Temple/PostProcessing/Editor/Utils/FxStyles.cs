@@ -1,6 +1,7 @@
+using UnityEditor;
 using UnityEngine;
 
-namespace UnityEditor.PostProcessing
+namespace Sun_Temple.PostProcessing.Editor.Utils
 {
     public static class FxStyles
     {

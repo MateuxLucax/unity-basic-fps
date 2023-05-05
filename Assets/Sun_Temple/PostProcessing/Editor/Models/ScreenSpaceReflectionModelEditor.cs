@@ -1,7 +1,8 @@
+using Sun_Temple.PostProcessing.Editor.Attributes;
 using Sun_Temple.PostProcessing.Runtime.Models;
-using UnityEngine;
+using UnityEditor;
 
-namespace UnityEditor.PostProcessing
+namespace Sun_Temple.PostProcessing.Editor.Models
 {
     using Settings = ScreenSpaceReflectionModel.Settings;
 

@@ -2,7 +2,7 @@ using System;
 using Sun_Temple.PostProcessing.Runtime;
 using UnityEngine;
 
-namespace UnityEditor.PostProcessing
+namespace Sun_Temple.PostProcessing.Editor
 {
     using MonitorSettings = PostProcessingProfile.MonitorSettings;
 

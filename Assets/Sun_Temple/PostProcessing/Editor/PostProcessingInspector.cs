@@ -1,17 +1,21 @@
-using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Sun_Temple.PostProcessing.Editor.Attributes;
+using Sun_Temple.PostProcessing.Editor.Monitors;
+using Sun_Temple.PostProcessing.Editor.Utils;
 using Sun_Temple.PostProcessing.Runtime;
 using Sun_Temple.PostProcessing.Runtime.Models;
 using Sun_Temple.PostProcessing.Runtime.Utils;
+using UnityEditor;
+using UnityEngine;
 
-namespace UnityEditor.PostProcessing
+namespace Sun_Temple.PostProcessing.Editor
 {
     //[CanEditMultipleObjects]
     [CustomEditor(typeof(PostProcessingProfile))]
-    public class PostProcessingInspector : Editor
+    public class PostProcessingInspector : UnityEditor.Editor
     {
         static GUIContent s_PreviewTitle = new GUIContent("Monitors");
 

@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
+using QuickOutline.Scripts;
 
 namespace Sun_Temple.Scripts.Doors
 {
-   
-
-    public class Door : MonoBehaviour
+   public class Door : MonoBehaviour
     {
 		public bool IsLocked = false;
         public bool DoorClosed = true;
@@ -17,6 +16,8 @@ namespace Sun_Temple.Scripts.Doors
 		private GameObject Player;
 		private Camera Cam;
 		private CursorManager cursor;
+		private AudioSource _audioSource;
+		private Outline _outline;
 
         Vector3 StartRotation;
         float StartAngle = 0;
@@ -60,7 +61,8 @@ namespace Sun_Temple.Scripts.Doors
 				cursor.SetCursorToDefault ();
 			}
 
-					
+					_audioSource = GetComponent<AudioSource>();					
+					_outline = GetComponent<Outline>();
         }
 
 
@@ -88,14 +90,26 @@ namespace Sun_Temple.Scripts.Doors
 
 
 		void TryToOpen(){
-			if (Mathf.Abs(Vector3.Distance(transform.position, Player.transform.position)) <= MaxDistance){	
-
+			if (Mathf.Abs(Vector3.Distance(transform.position, Player.transform.position)) <= MaxDistance) {	
 				Ray ray = Cam.ScreenPointToRay (new Vector3 (Screen.width / 2, Screen.height / 2, 0));
 				RaycastHit hit;
-											
-				if (DoorCollider.Raycast(ray, out hit, MaxDistance)){					
-					if (IsLocked == false){
-						Activate ();
+
+				if (DoorCollider.Raycast(ray, out hit, MaxDistance))
+				{
+					if (IsLocked == false)
+					{
+						Activate();
+						if (_outline)
+						{
+							_outline.OutlineWidth = 0;
+						}
+					}
+					else
+					{
+						if (_audioSource)
+						{
+							_audioSource.Play();
+						}
 					}
 				}
 			}
@@ -158,8 +172,6 @@ namespace Sun_Temple.Scripts.Doors
            
         }
 
-
-
         void Open()
         {
 			DoorCollider.enabled = false;
@@ -170,8 +182,6 @@ namespace Sun_Temple.Scripts.Doors
             Rotating = true;
         }
 
-
-
         void Close()
         {
 			DoorCollider.enabled = false;
@@ -181,6 +191,5 @@ namespace Sun_Temple.Scripts.Doors
             CurrentLerpTime = 0;
             Rotating = true;
         }
-
     }
 }

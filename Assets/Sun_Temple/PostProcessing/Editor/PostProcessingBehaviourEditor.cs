@@ -1,11 +1,13 @@
 using System;
 using System.Linq.Expressions;
+using Sun_Temple.PostProcessing.Editor.Utils;
 using Sun_Temple.PostProcessing.Runtime;
+using UnityEditor;
 
-namespace UnityEditor.PostProcessing
+namespace Sun_Temple.PostProcessing.Editor
 {
     [CustomEditor(typeof(PostProcessingBehaviour))]
-    public class PostProcessingBehaviourEditor : Editor
+    public class PostProcessingBehaviourEditor : UnityEditor.Editor
     {
         SerializedProperty m_Profile;
 

@@ -1,16 +1,14 @@
 using UnityEngine;
+using System.Collections;
 
-namespace JMO_Assets.WarFX.Demo.Assets
+public class WFX_Demo_DeleteAfterDelay : MonoBehaviour
 {
-	public class WFX_Demo_DeleteAfterDelay : MonoBehaviour
-	{
-		public float delay = 1.0f;
+	public float delay = 1.0f;
 	
-		void Update ()
-		{
-			delay -= Time.deltaTime;
-			if(delay < 0f)
-				GameObject.Destroy(this.gameObject);
-		}
+	void Update ()
+	{
+		delay -= Time.deltaTime;
+		if(delay < 0f)
+			GameObject.Destroy(this.gameObject);
 	}
 }

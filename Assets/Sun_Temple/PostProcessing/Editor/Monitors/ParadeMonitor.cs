@@ -1,8 +1,10 @@
+using Sun_Temple.PostProcessing.Editor.Utils;
 using Sun_Temple.PostProcessing.Runtime.Utils;
+using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace UnityEditor.PostProcessing
+namespace Sun_Temple.PostProcessing.Editor.Monitors
 {
     public class ParadeMonitor : PostProcessingMonitor
     {

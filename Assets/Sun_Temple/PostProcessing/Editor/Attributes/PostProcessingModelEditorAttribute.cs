@@ -1,6 +1,6 @@
 using System;
 
-namespace UnityEditor.PostProcessing
+namespace Sun_Temple.PostProcessing.Editor.Attributes
 {
     public class PostProcessingModelEditorAttribute : Attribute
     {

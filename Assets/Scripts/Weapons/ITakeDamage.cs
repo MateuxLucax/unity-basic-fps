@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Weapons
 {
     public interface ITakeDamage

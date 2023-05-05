@@ -1,6 +1,9 @@
+using Sun_Temple.PostProcessing.Editor.Attributes;
+using Sun_Temple.PostProcessing.Editor.Utils;
 using Sun_Temple.PostProcessing.Runtime.Models;
+using UnityEditor;
 
-namespace UnityEditor.PostProcessing
+namespace Sun_Temple.PostProcessing.Editor.Models
 {
     using Mode = BuiltinDebugViewsModel.Mode;
     using Settings = BuiltinDebugViewsModel.Settings;

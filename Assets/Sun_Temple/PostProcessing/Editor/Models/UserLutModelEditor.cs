@@ -1,7 +1,9 @@
+using Sun_Temple.PostProcessing.Editor.Attributes;
 using Sun_Temple.PostProcessing.Runtime.Models;
+using UnityEditor;
 using UnityEngine;
 
-namespace UnityEditor.PostProcessing
+namespace Sun_Temple.PostProcessing.Editor.Models
 {
     using Settings = UserLutModel.Settings;
 

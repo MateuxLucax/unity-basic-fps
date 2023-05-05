@@ -1,12 +1,13 @@
 using System;
-using UnityEngine;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using Sun_Temple.PostProcessing.Runtime;
 using Sun_Temple.PostProcessing.Runtime.Attributes;
+using UnityEditor;
+using UnityEngine;
 
-namespace UnityEditor.PostProcessing
+namespace Sun_Temple.PostProcessing.Editor.Utils
 {
     public static class EditorGUIHelper
     {

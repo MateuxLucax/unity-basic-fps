@@ -70,12 +70,17 @@ namespace Hero
         // ReSharper disable Unity.PerformanceAnalysis
         private void Clear()
         {
-            _keysText.text = "";
-            _messageText.text = "";
-            if (Utils.IsNullOrDestroyed(_targetObj)) return;
+            HideText();
+            if (Utils.General.IsNullOrDestroyed(_targetObj)) return;
             var outlineObj = _targetObj.GetComponent<Outline>();
             outlineObj.OutlineWidth = 0f;
             _targetObj = null;
+        }
+
+        public void HideText()
+        {
+            _keysText.text = "";
+            _messageText.text = "";
         }
 
         public float GetTargetDistance()

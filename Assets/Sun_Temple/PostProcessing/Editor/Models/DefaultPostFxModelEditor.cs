@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using UnityEditor;
 
-namespace UnityEditor.PostProcessing
+namespace Sun_Temple.PostProcessing.Editor.Models
 {
     public class DefaultPostFxModelEditor : PostProcessingModelEditor
     {

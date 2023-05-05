@@ -10,6 +10,7 @@ namespace Enemies.Boss
 
         private NavMeshAgent _agent;
         private GameObject _player;
+        private Inventory _inventory;
         private Animator _animator;
         public float attackDistance = 2.0f;
         private static readonly int Shot = Animator.StringToHash("shot");
@@ -26,7 +27,11 @@ namespace Enemies.Boss
         public AudioClip attackSound;
         public AudioClip damageSound;
         public AudioClip capoeiraSound;
+        public AudioClip growlSound;
         private AudioSource _audioSource;
+        private FieldOfView _fov;
+        private RandomPatrol _randomPatrol;
+        private bool _hasSeenPlayer;
 
         // Start is called before the first frame update
         void Start()
@@ -34,20 +39,47 @@ namespace Enemies.Boss
             _rigidbody = GetComponent<Rigidbody>();
             _agent = GetComponent<NavMeshAgent>();
             _player = GameObject.FindWithTag("Player");
+            _inventory = _player.GetComponent<Inventory>();
             _animator = GetComponent<Animator>();
             _ragDollEffect = GetComponent<RagDollEffect>();
             _audioSource = GetComponent<AudioSource>();
             _ragDollEffect.Init();
+            _fov = GetComponent<FieldOfView>();
+            _randomPatrol = GetComponent<RandomPatrol>();
         }
 
         // Update is called once per frame
         void Update()
         {
-            RunTowardsPlayer();
-            StarePlayer();
+            if (healthPoints <= 0)
+            {
+                Die();
+                return;
+            }
+
+            if (_fov.canSeePlayer || _animator.GetBool(StopAttack) == false)
+            {
+                if (!_hasSeenPlayer)
+                {
+                    PlayGrowl();
+                    _hasSeenPlayer = true;
+                }
+                RunTowardsPlayer();
+            } else
+            {
+                _hasSeenPlayer = false;
+                _animator.SetBool(StopAttack, true);
+                CorrectRigidbodyExit();
+                _agent.isStopped = false;
+                _randomPatrol.Walk();
+            }
         }
 
-    
+        private void PlayGrowl()
+        {
+            _audioSource.PlayOneShot(growlSound);
+        }
+
         private void RunTowardsPlayer()
         {
             var distanceFromPlayer = Vector3.Distance(transform.position, _player.transform.position);
@@ -59,25 +91,18 @@ namespace Enemies.Boss
                 _animator.SetBool(StopAttack, false);
                 CorrectRigidbodyEnter();
             }
-            if (distanceFromPlayer >= 3)
+            if (distanceFromPlayer >= attackDistance + 1)
             {
                 _animator.SetBool(StopAttack, true);
                 CorrectRigidbodyExit();
             }
-
-            if (!_animator.GetBool(CanWalk)) return;
-            _agent.isStopped = false;
-            _animator.ResetTrigger(Attack);
-            _animator.ResetTrigger(Capoeira);
-            _agent.SetDestination(_player.transform.position);
-        }
-
-    
-        private void StarePlayer()
-        {
-            var lookPos = _player.transform.position - transform.position;
-            var rotation = Quaternion.LookRotation(lookPos);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, Time.deltaTime * 300);
+            if (_animator.GetBool(CanWalk))
+            {
+                _agent.isStopped = false;
+                _animator.ResetTrigger(Attack);
+                _animator.ResetTrigger(Capoeira);
+                _agent.SetDestination(_player.transform.position);
+            }
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -133,12 +158,14 @@ namespace Enemies.Boss
 
         private void Die()
         {
+            _inventory.KilledBoss();
             _audioSource.clip = deathSound;
             _audioSource.Play();
             _agent.isStopped = true;
             _animator.SetBool(CanWalk, false);
             _ragDollEffect.Activate();
             enabled = false;
+            _fov.enabled = false;
         }
     }
 }

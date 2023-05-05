@@ -57,6 +57,7 @@ namespace Hero
             grabbable?.Grab();
 
             Destroy(_objectId.GetGrabObject());
+            _objectId.HideText();
         }
 
         private void Drag()

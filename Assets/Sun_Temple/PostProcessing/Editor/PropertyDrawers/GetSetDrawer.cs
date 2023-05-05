@@ -1,7 +1,9 @@
+using Sun_Temple.PostProcessing.Editor.Utils;
 using Sun_Temple.PostProcessing.Runtime.Attributes;
+using UnityEditor;
 using UnityEngine;
 
-namespace UnityEditor.PostProcessing
+namespace Sun_Temple.PostProcessing.Editor.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(GetSetAttribute))]
     sealed class GetSetDrawer : PropertyDrawer
